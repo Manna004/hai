@@ -1,0 +1,82 @@
+import time
+
+from threading import Thread, Lock
+
+import sys
+
+
+
+lock = Lock()
+
+
+
+def animate_text(text, delay=0.1):
+
+    with lock:
+
+        for char in text:
+
+            sys.stdout.write(char)
+
+            sys.stdout.flush()
+
+            time.sleep(delay)
+
+        print()
+
+
+
+def sing_lyric(lyric, delay, speed):
+
+    time.sleep(delay)
+
+    animate_text(lyric, speed)
+
+
+
+def sing_song():
+
+    lyrics = [
+
+        ("halo sayang", 0.1),
+
+        ("sayangku baymak", 0.1),
+
+        ("kamu kok ga nanya?", 0.1),
+
+        ("aku udah dirumah blm?", 0.2),
+
+        ("KAMU GANANYA AKU DIRUMAH APA BELOM?", 0.08),
+
+        ("SANA", 0.1),
+
+        ("BERLAKU KAYA GAPUNYA PACAR WAKTU SAMA TEMENMU", 0.1),
+
+
+    delays = [0.3, 5.0, 10.0, 15.0, 20.3, 25.0, 27.0, 30.2, 33.3]
+
+    
+
+    threads = []
+
+    for i in range(len(lyrics)):
+
+        lyric, speed = lyrics[i]
+
+        t = Thread(target=sing_lyric, args=(lyric, delays[i], speed))
+
+        threads.append(t)
+
+        t.start()
+
+    
+
+    for thread in threads:
+
+        thread.join()
+
+
+
+if __name__ == "__main__":
+
+    sing_song()
